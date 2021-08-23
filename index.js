@@ -11,7 +11,7 @@ app.use(cors());
 //Database
 dbConnection();
 
-//98. CONFIGURAR CORS MINUTO 1:03 SWEETIE
+
 //Rutas
 app.get('/', (req, res) => {
 
