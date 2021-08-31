@@ -1,5 +1,6 @@
 const Usuario = require('../models/usuario');
 const { response } = require('express');
+const { JWT } = require('../helpers/jwt');
 const bcrypt = require('bcryptjs');
 
 
@@ -19,7 +20,6 @@ const getUsers = async(req, res = response) => {
 const creatUsers = async(req, res) => {
 
     const { email, password } = req.body;
-
 
 
     try {
@@ -43,10 +43,13 @@ const creatUsers = async(req, res) => {
         //SAVE USER
         await usuario.save();
 
+        //GENERA EL JWT
+        const token = await JWT(usuario.id);
 
         res.json({
             ok: true,
-            usuario
+            usuario,
+            token
         });
 
     } catch (error) {
@@ -149,5 +152,3 @@ module.exports = {
 
 
 //TODO: GET: CONSULTA LOS USUARIOS DE LA BASE DE DATOS, POST: CREAO UN USUARIO NUEVO, PUT: ACTUALIZA UN USUARIO Y LOS DATOS Y DELETE: ELIMINA USUARIOS.
-
-
