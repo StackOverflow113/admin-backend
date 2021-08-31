@@ -42,7 +42,7 @@ const creatUsers = async(req, res) => {
 
         //SAVE USER
         await usuario.save();
-        //TODO: ME QUEDE EN EL CAPITULO 113. MIN 0
+
 
         res.json({
             ok: true,
@@ -76,12 +76,11 @@ const updateUser = async(req, res = response) => {
         }
 
         //Actualizaciones
-        const campos = req.body;
-        if (usuarioDB.email === req.body.email) {
-            delete campos.email;
-        } else {
+        const { password, google, email, ...campos } = req.body;
 
-            const existeEmail = await Usuario.findOne({ email: req.body.email });
+        if (usuarioDB.email !== email) {
+
+            const existeEmail = await Usuario.findOne({ email });
             if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
@@ -91,8 +90,7 @@ const updateUser = async(req, res = response) => {
 
         }
 
-        delete campos.password;
-        delete campos.google;
+        campos.email = email;
 
         const userUpdated = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
 
@@ -110,8 +108,47 @@ const updateUser = async(req, res = response) => {
     }
 }
 
+const deleteUser = async(req, res = response) => {
+    const uid = req.params.id;
+    try {
+
+        const usuarioDB = await Usuario.findById(uid);
+
+        if (!usuarioDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe usuario con ese id'
+            });
+        }
+
+        await Usuario.findByIdAndDelete(uid);
+
+
+        res.json({
+            ok: true,
+            msg: 'Usuario eliminado correctamente'
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            ok: false,
+            msg: 'usaurio elmiminado',
+            deleteUser
+        });
+    }
+
+}
+
 module.exports = {
     getUsers,
     creatUsers,
-    updateUser
+    updateUser,
+    deleteUser
 };
+
+
+//TODO: GET: CONSULTA LOS USUARIOS DE LA BASE DE DATOS, POST: CREAO UN USUARIO NUEVO, PUT: ACTUALIZA UN USUARIO Y LOS DATOS Y DELETE: ELIMINA USUARIOS.
+
+
+//TODO: 115. LOGIN USUARIO

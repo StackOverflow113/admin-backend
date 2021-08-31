@@ -15,15 +15,9 @@ app.use(express.json());
 //Database
 dbConnection();
 
-<<<<<<< HEAD
-=======
-
-//Rutas
-app.get('/', (req, res) => {
->>>>>>> fc04063e7f575b780eb3a3e1be7f81a6bca66506
-
 //Rutas
 app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 app.listen(process.env.PORT, () => {
     console.log('Server running in port' + process.env.PORT);
